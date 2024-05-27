@@ -3,10 +3,10 @@ import mongoose from "mongoose";
 export type ShopType = {
   name: string;
   location: string;
-  image_url?: string;
-  ownerId?: mongoose.Types.ObjectId[];
+  image_url: string;
+  ownerId: mongoose.Types.ObjectId[];
   email: string;
-  items?: mongoose.Types.ObjectId[];
+  items: mongoose.Types.ObjectId[];
 };
 
 const shopSchema = new mongoose.Schema({
