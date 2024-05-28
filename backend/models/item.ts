@@ -22,9 +22,9 @@ export type CartItemType = {
 
 export const cartItemSchema = new mongoose.Schema({
   item: { type: mongoose.Schema.Types.ObjectId, ref: "Item", required: true },
-  quantity: { type: Number },
+  quantity: { type: Number, required: true },
 });
 
-const Item = mongoose.model("Item", itemSchema);
+const Item = mongoose.model<ItemType>("Item", itemSchema);
 
 export default Item;
