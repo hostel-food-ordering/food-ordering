@@ -32,9 +32,7 @@ const shopSchema = new mongoose.Schema({
       },
     ],
     validate: {
-      validator: (arr: mongoose.Types.ObjectId[]) => {
-        arr.length > 0;
-      },
+      validator: (arr: mongoose.Types.ObjectId[]) => arr.length > 0,
       message: "Shop must have atleast one owner",
     },
   },
