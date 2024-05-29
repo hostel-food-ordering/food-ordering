@@ -1,7 +1,8 @@
 import { Router, Request, Response } from "express";
-import { check, validationResult } from "express-validator";
+import { check, oneOf, validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 import User from "../models/user";
+import verifyToken from "../middleware/auth";
 
 const user = Router();
 
@@ -58,6 +59,44 @@ user.post(
         message: "Something went wrong",
       });
     }
+  }
+);
+
+user.patch(
+  "/update",
+  oneOf([
+    check("firstName").exists().isString().isLength({ min: 2 }),
+    check("lastName").exists().isString().isLength({ min: 2 }),
+    check("password").exists().isString().isLength({ min: 8, max: 16 }),
+  ]),
+  verifyToken,
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ message: errors.array() });
+    }
+
+    const { firstName, lastName, password } = req.body;
+    try {
+      const user = await User.findById(req.userId);
+      if (!user) {
+        return res.status(404).send({ message: "User not found" });
+      }
+
+      if (firstName) user.firstName = firstName;
+      if (lastName) user.lastName = lastName;
+      if (password) user.password = password;
+
+      await user.save();
+
+      return res.status(200).send({
+        message: `User fields updated: ${
+          (firstName ? "first name " : "") +
+          (lastName ? "last name " : "") +
+          (password ? "password" : "")
+        }`,
+      });
+    } catch (error) {}
   }
 );
 
