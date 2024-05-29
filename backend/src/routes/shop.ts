@@ -1,11 +1,9 @@
 import { Router, Request, Response } from "express";
 import { check, validationResult } from "express-validator";
-import Shop from "../models/shop";
+import Shop, { ShopType } from "../models/shop";
 import mongoose from "mongoose";
 
 const shop = Router();
-
-// PATCH /api/shop/:shop_id
 
 shop.post(
   "/",
@@ -80,6 +78,55 @@ shop.delete(
       return res.status(200).send({
         message: "Shop deleted successfully",
       });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({
+        message: "Something went wrong",
+      });
+    }
+  }
+);
+
+shop.patch(
+  "/patch/:shop_id",
+  [
+    check("shop_id", "Invalid shop ID").custom((value) =>
+      mongoose.Types.ObjectId.isValid(value)
+    ),
+    check("name", "Name must be a string").optional().isString(),
+    check("location", "Location must be a string").optional().isString(),
+    check("email", "Email must be valid").optional().isEmail(),
+    check("phone", "Phone number must be an integer of length 10")
+      .optional()
+      .isInt()
+      .isLength({ min: 10, max: 10 }),
+    check("openingTime", "Opening time must be a string").optional().isString(),
+  ],
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: errors.array });
+    }
+
+    try {
+      let shop = await Shop.findOne({
+        shop_id: req.params.shop_id,
+      });
+
+      if (!shop) {
+        return res.status(404).send({
+          message: "Shop not found",
+        });
+      }
+
+      const updates = req.body as Partial<ShopType>;
+
+      Object.entries(updates).forEach(([key, value]) => {
+        if (key in shop) {
+          (shop as any)[key] = value;
+        }
+      });
+      await shop.save();
     } catch (error) {
       console.log(error);
       res.status(500).send({
