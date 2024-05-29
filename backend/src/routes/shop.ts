@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { check, validationResult } from "express-validator";
 import Shop, { ShopType } from "../models/shop";
 import mongoose from "mongoose";
+import isOwner from "../middleware/shopOwner";
 
 const shop = Router();
 
@@ -56,6 +57,7 @@ shop.delete(
     check("shop_id", "Invalid shop ID").custom((value) =>
       mongoose.Types.ObjectId.isValid(value)
     ),
+    isOwner,
   ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -101,6 +103,7 @@ shop.patch(
       .isInt()
       .isLength({ min: 10, max: 10 }),
     check("openingTime", "Opening time must be a string").optional().isString(),
+    isOwner,
   ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
