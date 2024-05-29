@@ -7,7 +7,7 @@ export type ItemType = {
   image_url: string;
   category: string;
   isVegetarian: boolean;
-  shop: mongoose.Schema.Types.ObjectId | ShopType;
+  shop: mongoose.Types.ObjectId;
 };
 
 const itemSchema = new mongoose.Schema({
