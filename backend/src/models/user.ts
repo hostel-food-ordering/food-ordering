@@ -1,20 +1,19 @@
 import mongoose from "mongoose";
 import { CartItemType, cartItemSchema } from "./item";
-import { ShopType } from "./shop";
-import { OrderType } from "./order";
+import bcrypt from "bcryptjs";
 
 export type UserType = {
   firstName: string;
   lastName: string;
+  email: string;
   password: string;
-  ownedStore: ShopType[];
   cart: CartItemType[];
-  orderHistory: OrderType[];
 };
 
 const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
+  email: { type: String, required: true },
   password: { type: String, required: true },
   cart: {
     type: [{ type: cartItemSchema }],
@@ -35,6 +34,13 @@ userSchema.virtual("ownedShop", {
 
 userSchema.set("toObject", { virtuals: true });
 userSchema.set("toJSON", { virtuals: true });
+
+userSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    this.password = await bcrypt.hash(this.password, 8);
+  }
+  next();
+});
 
 const User = mongoose.model("User", userSchema);
 
