@@ -3,6 +3,7 @@ import { check, oneOf, validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 import User from "../models/user";
 import verifyToken from "../middleware/auth";
+import { isCartItemTypeArray } from "../utils/checkCart";
 
 const user = Router();
 
@@ -96,7 +97,47 @@ user.patch(
           (password ? "password" : "")
         }`,
       });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({
+        message: "Something went wrong",
+      });
+    }
+  }
+);
+
+user.patch(
+  "/cart/update",
+  verifyToken,
+  [check("cart").exists().isArray()],
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ message: errors.array() });
+    }
+
+    try {
+      const user = await User.findById(req.userId);
+      if (!user) {
+        return res.status(404).send({ message: "User not found" });
+      }
+
+      console.log(req.body.cart);
+
+      if (!isCartItemTypeArray(req.body.cart)) {
+        return res.status(400).send({ message: "Wrong Cart" });
+      }
+
+      user.cart = req.body.cart;
+      await user.save();
+
+      res.status(200).send({ message: "Cart Updated Successfully" });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({
+        message: "Something went wrong",
+      });
+    }
   }
 );
 
