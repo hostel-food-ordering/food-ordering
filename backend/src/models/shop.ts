@@ -44,14 +44,12 @@ const shopSchema = new mongoose.Schema({
       },
     ],
   },
-  orderHistory: {
-    type: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Order",
-      },
-    ],
-  },
+});
+
+shopSchema.virtual("orderHistory", {
+  ref: "Order",
+  localField: "_id",
+  foreignField: "shop",
 });
 
 const Shop = mongoose.model<ShopType>("Shop", shopSchema);
