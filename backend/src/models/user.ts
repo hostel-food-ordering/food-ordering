@@ -20,14 +20,12 @@ const userSchema = new mongoose.Schema({
   cart: {
     type: [{ type: cartItemSchema }],
   },
-  orderHistory: {
-    type: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Order",
-      },
-    ],
-  },
+});
+
+userSchema.virtual("orderHistory", {
+  ref: "Order",
+  localField: "_id",
+  foreignField: "user",
 });
 
 const User = mongoose.model("User", userSchema);
