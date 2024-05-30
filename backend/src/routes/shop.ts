@@ -3,11 +3,13 @@ import { check, validationResult } from "express-validator";
 import Shop, { ShopType } from "../models/shop";
 import mongoose from "mongoose";
 import isOwner from "../middleware/shopOwner";
+import isAdmin from "../middleware/checkAdmin";
 
 const shop = Router();
 
 shop.post(
-  "/",
+  "/register",
+  isAdmin,
   [
     check("name", "Name is required").isString().notEmpty(),
     check("location", "Location is required").isString().notEmpty(),
@@ -53,7 +55,7 @@ shop.post(
 
 shop.delete(
   "/delete/:shop_id",
-  isOwner,
+  isAdmin,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -86,6 +88,7 @@ shop.delete(
 
 shop.patch(
   "/patch/:shop_id",
+  isOwner,
   [
     check("shop_id", "Invalid shop ID").custom((value) =>
       mongoose.Types.ObjectId.isValid(value)
@@ -99,7 +102,6 @@ shop.patch(
       .isLength({ min: 10, max: 10 }),
     check("openingTime", "Opening time must be a string").optional().isString(),
   ],
-  isOwner,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
