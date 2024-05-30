@@ -4,6 +4,7 @@ import Shop, { ShopType } from "../models/shop";
 import mongoose from "mongoose";
 import isOwner from "../middleware/shopOwner";
 import isAdmin from "../middleware/checkAdmin";
+import User from "../models/user";
 
 const shop = Router();
 
@@ -19,7 +20,6 @@ shop.post(
       .isLength({ min: 10, max: 10 })
       .notEmpty(),
     check("openingTime", "Opening time is required").isString().notEmpty(),
-    // todo: add a check for ownerId
   ],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -38,7 +38,22 @@ shop.post(
         });
       }
 
-      shop = new Shop(req.body);
+      // fetch userId associated with provided email
+      let user = await User.findOne({
+        email: req.body.email,
+      });
+
+      if (!user) {
+        return res.status(404).send({
+          message: "User not found",
+        });
+      }
+
+      shop = new Shop({
+        ...req.body,
+        ownerId: [user._id],
+      });
+
       await shop.save();
 
       return res.status(200).send({
