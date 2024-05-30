@@ -10,6 +10,7 @@ const isAdmin = [
       if (!(user && user.isAdmin)) {
         return res.status(401).send({ message: "No Admin rights" });
       }
+      req.user = user;
       next();
     } catch (error) {
       console.error(error);
