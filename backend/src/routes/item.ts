@@ -96,4 +96,40 @@ item.patch(
   }
 );
 
+item.delete(
+  "/delete/:item_id",
+  [
+    param("item_id", "Invalid Item ID")
+      .exists()
+      .custom((value) => mongoose.Types.ObjectId.isValid(value)),
+  ],
+  isOwner,
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ message: errors.array() });
+    }
+
+    try {
+      const item = await Item.findById(req.params.item_id);
+      if (!item) {
+        return res.status(404).send({ message: "Item not found" });
+      }
+      if (String(item.shop) !== req.shopId) {
+        return res
+          .status(400)
+          .send({ message: "Item doesn't belong to this shop" });
+      }
+      await item.deleteOne();
+
+      return res.status(200).send({ message: "Items Updated Successfully" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({
+        message: "Something went wrong",
+      });
+    }
+  }
+);
+
 export default item;
