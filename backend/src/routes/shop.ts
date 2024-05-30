@@ -53,12 +53,7 @@ shop.post(
 
 shop.delete(
   "/delete/:shop_id",
-  [
-    check("shop_id", "Invalid shop ID").custom((value) =>
-      mongoose.Types.ObjectId.isValid(value)
-    ),
-    isOwner,
-  ],
+  isOwner,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -103,8 +98,8 @@ shop.patch(
       .isInt()
       .isLength({ min: 10, max: 10 }),
     check("openingTime", "Opening time must be a string").optional().isString(),
-    isOwner,
   ],
+  isOwner,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
