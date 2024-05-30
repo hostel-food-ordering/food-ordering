@@ -38,6 +38,7 @@ user.post(
         return res.status(400).send({ message: "User already exists" });
       }
 
+      req.body.isAdmin = false;
       user = new User(req.body);
       await user.save();
 
