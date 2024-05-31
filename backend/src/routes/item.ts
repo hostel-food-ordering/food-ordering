@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 const item = Router();
 
 item.post(
-  "/add:shop_id",
+  "/add",
   isOwner,
   [check("items", "Items missing").exists().isArray()],
   async (req: Request, res: Response) => {
@@ -23,7 +23,7 @@ item.post(
       }
 
       req.body.items.forEach((item: ItemType) => {
-        item.shop = new mongoose.Types.ObjectId(req.params.shop_id);
+        item.shop = new mongoose.Types.ObjectId(req.shopId);
       });
 
       await Item.insertMany(req.body.items);
@@ -68,7 +68,7 @@ item.patch(
       if (!item) {
         return res.status(404).send({ message: "Item not found" });
       }
-      console.log(item.shop, req.shopId);
+
       if (
         String(item._id) !== req.params.item_id ||
         String(item.shop) !== req.shopId
