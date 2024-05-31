@@ -40,6 +40,7 @@ item.post(
 
 item.patch(
   "/update/:item_id",
+  isOwner,
   [
     check("item", "Wrong Item")
       .exists()
@@ -48,7 +49,6 @@ item.patch(
       .exists()
       .custom((value) => mongoose.Types.ObjectId.isValid(value)),
   ],
-  isOwner,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -98,12 +98,12 @@ item.patch(
 
 item.delete(
   "/delete/:item_id",
+  isOwner,
   [
     param("item_id", "Invalid Item ID")
       .exists()
       .custom((value) => mongoose.Types.ObjectId.isValid(value)),
   ],
-  isOwner,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

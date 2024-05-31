@@ -66,12 +66,12 @@ user.post(
 
 user.patch(
   "/update",
+  verifyToken,
   oneOf([
     check("firstName").exists().isString().isLength({ min: 2 }),
     check("lastName").exists().isString().isLength({ min: 2 }),
     check("password").exists().isString().isLength({ min: 8, max: 16 }),
   ]),
-  verifyToken,
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
