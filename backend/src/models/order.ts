@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
-import { CartItemType, cartItemSchema } from "./item";
+import { itemSchema, ItemType } from "./item";
+
+export type OrderCartItemType = {
+  item: ItemType;
+  quantity: number;
+};
 
 export type OrderType = {
   shop: mongoose.Types.ObjectId;
@@ -7,7 +12,7 @@ export type OrderType = {
   status: "PENDING" | "PROCESSING" | "DELIVERED" | "CANCELLED";
   creationTime: Date;
   orderValue: number;
-  cartItems: CartItemType[];
+  cartItems: OrderCartItemType[];
 } & mongoose.Document;
 
 const orderSchema = new mongoose.Schema({
@@ -25,7 +30,7 @@ const orderSchema = new mongoose.Schema({
     required: true,
   },
   cartItems: {
-    type: [{ type: cartItemSchema, required: true }],
+    type: [{ item: itemSchema, quantity: { type: Number, required: true } }],
     validate: {
       validator: (arr: mongoose.Types.ObjectId[]) => arr.length > 0,
       message: "Order must contain at least one item",

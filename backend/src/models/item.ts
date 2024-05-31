@@ -10,7 +10,7 @@ export type ItemType = {
   shop: mongoose.Types.ObjectId;
 } & mongoose.Document;
 
-const itemSchema = new mongoose.Schema({
+export const itemSchema = new mongoose.Schema({
   name: { type: String, required: true },
   price: { type: Number, required: true },
   image_url: { type: String },
@@ -20,7 +20,7 @@ const itemSchema = new mongoose.Schema({
 });
 
 export type CartItemType = {
-  item: ItemType;
+  item: mongoose.Types.ObjectId | ItemType;
   quantity: number;
 } & mongoose.Document;
 
