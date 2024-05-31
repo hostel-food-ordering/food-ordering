@@ -1,9 +1,12 @@
 import { Router, Request, Response } from "express";
-import { check, oneOf, validationResult } from "express-validator";
+import { check, oneOf, param, validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 import User from "../models/user";
 import verifyToken from "../middleware/auth";
 import { isCartItemTypeArray } from "../utils/checkCart";
+import mongoose from "mongoose";
+import { CartItemType, ItemType } from "../models/item";
+import Order, { OrderCartItemType } from "../models/order";
 
 const user = Router();
 
@@ -136,6 +139,68 @@ user.patch(
     } catch (error) {
       console.log(error);
       res.status(500).send({
+        message: "Something went wrong",
+      });
+    }
+  }
+);
+
+user.post(
+  "/place-order/:shop_id",
+  verifyToken,
+  [
+    param("shop_id", "Shop id Invalid").custom((value) =>
+      mongoose.Types.ObjectId.isValid(value)
+    ),
+  ],
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).send({ message: errors.array() });
+    }
+
+    try {
+      const user = await User.findById(req.userId).populate("cart.item");
+      if (!user) {
+        return res.status(404).send({ message: "User not found" });
+      }
+
+      const orderCart: OrderCartItemType[] = [];
+      user.cart.forEach((cartItem: CartItemType) => {
+        if (String((cartItem.item as ItemType).shop) === req.params.shop_id) {
+          orderCart.push(cartItem as OrderCartItemType);
+        }
+      });
+
+      if (orderCart.length === 0) {
+        return res
+          .status(400)
+          .send({ message: "No item in your cart from this shop" });
+      }
+
+      const newOrder = new Order({
+        shop: req.params.shop_id,
+        user: req.userId,
+        orderValue: orderCart.reduce(
+          (sum, orderCart) => sum + orderCart.item.price * orderCart.quantity,
+          0
+        ),
+        cartItems: orderCart,
+      });
+
+      user.cart = user.cart.filter((cartItem: CartItemType) => {
+        return !(
+          String((cartItem.item as ItemType).shop) === req.params.shop_id
+        );
+      });
+
+      await user.save();
+      await newOrder.save();
+
+      return res.status(200).send({ message: "Order Placed Successfully" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({
         message: "Something went wrong",
       });
     }
