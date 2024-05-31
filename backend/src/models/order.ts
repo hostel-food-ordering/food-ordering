@@ -8,7 +8,7 @@ export type OrderType = {
   creationTime: Date;
   orderValue: number;
   cartItems: CartItemType[];
-};
+} & mongoose.Document;
 
 const orderSchema = new mongoose.Schema({
   shop: { type: mongoose.Schema.Types.ObjectId, ref: "Shop", required: true },

@@ -9,7 +9,7 @@ export type UserType = {
   password: string;
   isAdmin: boolean;
   cart: CartItemType[];
-};
+} & mongoose.Document;
 
 const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },

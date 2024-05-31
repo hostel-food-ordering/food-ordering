@@ -11,7 +11,7 @@ export type ShopType = {
   ownerId: mongoose.Types.ObjectId[];
   items: mongoose.Types.ObjectId[];
   orderHistory: mongoose.Types.ObjectId[];
-};
+} & mongoose.Document;
 
 const shopSchema = new mongoose.Schema({
   name: { type: String, required: true },

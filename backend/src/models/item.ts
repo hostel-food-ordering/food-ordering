@@ -8,7 +8,7 @@ export type ItemType = {
   category: string;
   isVegetarian: boolean;
   shop: mongoose.Types.ObjectId;
-};
+} & mongoose.Document;
 
 const itemSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -22,7 +22,7 @@ const itemSchema = new mongoose.Schema({
 export type CartItemType = {
   item: ItemType;
   quantity: number;
-};
+} & mongoose.Document;
 
 export const cartItemSchema = new mongoose.Schema(
   {
