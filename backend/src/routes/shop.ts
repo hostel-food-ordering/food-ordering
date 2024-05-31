@@ -102,7 +102,7 @@ shop.delete(
 );
 
 shop.patch(
-  "/patch/:shop_id",
+  "/update/:shop_id",
   isOwner,
   [
     check("shop_id", "Invalid shop ID").custom((value) =>
@@ -124,16 +124,28 @@ shop.patch(
     }
 
     try {
-      let shop = req.shop;
+      const modificationKeys = [
+        "name",
+        "location",
+        "image_url",
+        "phone",
+        "isOpen",
+        "openingTime",
+      ];
 
-      const updates = req.body as Partial<ShopType>;
+      const shop = req.shop;
 
-      Object.entries(updates).forEach(([key, value]) => {
-        if (key in shop) {
-          (shop as any)[key] = value;
+      for (const key of modificationKeys) {
+        if (req.body.item[key]) {
+          (shop as any)[key] = req.body.item[key];
         }
-      });
+      }
+
       await shop.save();
+
+      return res.status(200).send({
+        message: "Shop details updated successfully",
+      });
     } catch (error) {
       console.log(error);
       res.status(500).send({
