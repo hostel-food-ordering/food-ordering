@@ -124,15 +124,7 @@ shop.patch(
     }
 
     try {
-      let shop = await Shop.findOne({
-        shop_id: req.params.shop_id,
-      });
-
-      if (!shop) {
-        return res.status(404).send({
-          message: "Shop not found",
-        });
-      }
+      let shop = req.shop;
 
       const updates = req.body as Partial<ShopType>;
 
