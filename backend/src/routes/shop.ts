@@ -190,7 +190,7 @@ shop.patch(
         });
       }
 
-      // check if new owner exists
+      // check if user exists
       const user = await User.findOne({
         email: req.body.email,
       });
@@ -212,6 +212,64 @@ shop.patch(
       return res.status(200).send({
         message: "New owner added successfully",
         shop,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({
+        message: "Something went wrong",
+      });
+    }
+  }
+);
+
+shop.patch(
+  "/remove_owner/:shop_id",
+  isAdmin,
+  [check("email", "Email is required").isString().notEmpty()],
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).send({
+        message: errors.array,
+      });
+    }
+
+    try {
+      // check if shop exists
+      const shop = await Shop.findOne({
+        shop_id: req.params.shop_id,
+      });
+      if (!shop) {
+        return res.status(404).send({
+          message: "Shop not found",
+        });
+      }
+
+      // check if user exists
+      const user = await User.findOne({
+        email: req.body.email,
+      });
+      if (!user) {
+        return res.status(404).send({
+          message: "User not found",
+        });
+      }
+      const index = shop.ownerId.findIndex((id) =>
+        id.equals(user._id as mongoose.Types.ObjectId)
+      );
+
+      // check if user is an owner
+      if (index === -1) {
+        return res.status(400).send({
+          message: "User is not an owner of the shop",
+        });
+      }
+      shop.ownerId.splice(index, 1);
+      await shop.save();
+
+      await shop.save();
+      return res.status(200).send({
+        message: "Removed owner successfully",
       });
     } catch (error) {
       console.log(error);
