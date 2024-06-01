@@ -34,6 +34,13 @@ userSchema.virtual("ownedShop", {
   foreignField: "ownerId",
 });
 
+userSchema.methods.toJSON = function () {
+  const user = this.toObject();
+  user.fullName = this.firstName + " " + this.lastName;
+  delete user.password;
+  return user;
+};
+
 userSchema.set("toObject", { virtuals: true });
 userSchema.set("toJSON", { virtuals: true });
 
