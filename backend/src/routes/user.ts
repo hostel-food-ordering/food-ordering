@@ -10,6 +10,25 @@ import Order, { OrderCartItemType } from "../models/order";
 
 const user = Router();
 
+user.get("/profile", verifyToken, async (req: Request, res: Response) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      res.cookie("auth_token", "", {
+        expires: new Date(0),
+      });
+      return res.status(404).send({ message: "Forced Logout: User Not Found" });
+    }
+
+    return res.status(200).send(user);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: "Something went wrong",
+    });
+  }
+});
+
 user.post(
   "/register",
   [
