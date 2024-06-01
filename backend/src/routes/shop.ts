@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { check, validationResult } from "express-validator";
-import Shop, { ShopType } from "../models/shop";
+import Shop from "../models/shop";
 import mongoose from "mongoose";
 import isOwner from "../middleware/shopOwner";
 import isAdmin from "../middleware/checkAdmin";
