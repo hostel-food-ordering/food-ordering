@@ -164,6 +164,43 @@ user.patch(
   }
 );
 
+user.get("/order", verifyToken, async (req: Request, res: Response) => {
+  try {
+    const { order_id } = req.query;
+
+    const user = await User.findById(req.userId).populate("orderHistory");
+    if (!user) {
+      res.cookie("auth_token", "", {
+        expires: new Date(0),
+      });
+      return res.status(404).send({ message: "Forced Logout: User Not Found" });
+    }
+
+    if (order_id) {
+      const order = user.orderHistory.find((order) => order._id);
+      if (!order) {
+        return res.status(404).send({ message: "No Such Order Found" });
+      }
+      return res.status(200).send(order);
+    }
+
+    const removalKeys: string[] = ["cartItems"];
+    const order = user.orderHistory;
+    order.forEach((order) => {
+      removalKeys.forEach((key) => {
+        (order as any)[key] = undefined;
+      });
+    });
+
+    return res.status(200).send({ orderHistory: order });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: "Something went wrong",
+    });
+  }
+});
+
 user.post(
   "/place-order/:shop_id",
   verifyToken,

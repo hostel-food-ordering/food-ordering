@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import { CartItemType, cartItemSchema } from "./item";
 import bcrypt from "bcryptjs";
+import { OrderType } from "./order";
+import { ShopType } from "./shop";
 
 export type UserType = {
   firstName: string;
@@ -9,6 +11,8 @@ export type UserType = {
   password: string;
   isAdmin: boolean;
   cart: CartItemType[];
+  orderHistory: OrderType[];
+  ownedShop: ShopType[];
 } & mongoose.Document;
 
 const userSchema = new mongoose.Schema({
