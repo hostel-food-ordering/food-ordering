@@ -167,4 +167,59 @@ shop.patch(
   }
 );
 
+shop.patch(
+  "/add_owner/:shop_id",
+  isAdmin,
+  [check("email", "Email is required").isString().notEmpty()],
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).send({
+        message: errors.array,
+      });
+    }
+
+    try {
+      // check if shop exists
+      const shop = await Shop.findOne({
+        shop_id: req.params.shop_id,
+      });
+      if (!shop) {
+        return res.status(404).send({
+          message: "Shop not found",
+        });
+      }
+
+      // check if new owner exists
+      const user = await User.findOne({
+        email: req.body.email,
+      });
+      if (!user) {
+        return res.status(404).send({
+          message: "User not found",
+        });
+      }
+
+      // check if user is already an owner
+      if (shop.ownerId.includes(user._id as mongoose.Types.ObjectId)) {
+        return res.status(400).send({
+          message: "User is already an owner",
+        });
+      }
+
+      shop.ownerId.push(user._id as mongoose.Types.ObjectId);
+      await shop.save();
+      return res.status(200).send({
+        message: "New owner added successfully",
+        shop,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({
+        message: "Something went wrong",
+      });
+    }
+  }
+);
+
 export default shop;
