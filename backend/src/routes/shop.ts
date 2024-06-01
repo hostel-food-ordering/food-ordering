@@ -5,8 +5,20 @@ import mongoose from "mongoose";
 import isOwner from "../middleware/shopOwner";
 import isAdmin from "../middleware/checkAdmin";
 import User from "../models/user";
+import verifyToken from "../middleware/auth";
 
 const shop = Router();
+
+shop.get("/my_shops", verifyToken, async (req: Request, res: Response) => {
+  try {
+    const ownedShops = await Shop.find({ ownerId: req.userId }).select(
+      "-_id -items -ownerId"
+    );
+    res.status(200).send({ ownedShops });
+  } catch (error) {
+    res.status(500).send({ message: "Something went wrong" });
+  }
+});
 
 shop.post(
   "/register",
