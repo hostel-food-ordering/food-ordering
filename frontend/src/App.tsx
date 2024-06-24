@@ -1,5 +1,17 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 function App() {
-  return <></>;
+  return (
+    <>
+      <Router>
+        {/* <Navbar /> */}
+        <Routes>
+          {/* <Route path="/" element={<Home />} /> */}
+          {/* <Route path="/:shop_name" element={<Shop />} /> */}
+        </Routes>
+      </Router>
+    </>
+  );
 }
 
 export default App;
