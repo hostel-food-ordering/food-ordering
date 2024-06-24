@@ -5,12 +5,9 @@ function Navbar() {
   const [toggleMenu, setToggleMenu] = useState(false);
 
   const navigationLinks = [
-    ["/", "Home"],
-    ["/tech", "Tech"],
-    ["/cult", "Cult"],
-    ["/sports", "Sports"],
-    ["/mess", "Mess"],
-    ["/council", "Council"],
+    ["/categories", "Catergories"],
+    ["/cart", "Cart"],
+    ["/account", "Account"],
   ];
 
   return (
@@ -32,9 +29,9 @@ function Navbar() {
             toggleMenu ? "flex" : "hidden"
           }`}
         >
-          <Link to="#">Categories</Link>
-          <Link to="#">Cart</Link>
-          <Link to="#">Account</Link>
+          {navigationLinks.map((link) => {
+            return <Link to={link[0]}>{link[1]}</Link>;
+          })}
         </div>
       </div>
     </div>
