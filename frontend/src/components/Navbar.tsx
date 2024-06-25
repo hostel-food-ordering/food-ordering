@@ -1,14 +1,22 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAppContext } from "../contexts/AppContext";
 
 function Navbar() {
+  const { isLoggedIn } = useAppContext();
+
   const [toggleMenu, setToggleMenu] = useState(false);
 
-  const navigationLinks = [
-    ["/categories", "Catergories"],
-    ["/cart", "Cart"],
-    ["/account", "Account"],
-  ];
+  const navigationLinks = isLoggedIn
+    ? [
+        ["/categories", "Catergories"],
+        ["/cart", "Cart"],
+        ["/account", "Account"],
+      ]
+    : [
+        ["/categories", "Catergories"],
+        ["/sign-in", "Sign In"],
+      ];
 
   return (
     <div className="bg-gray-200 py-3 flex flex-col sm:flex-row justify-between items-center">

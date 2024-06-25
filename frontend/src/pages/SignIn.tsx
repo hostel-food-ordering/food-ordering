@@ -32,7 +32,7 @@ const SignIn = () => {
       className="flex flex-col gap-4 mx-2 max-w-screen-md"
       onSubmit={onSubmit}
     >
-      <h2 className="text-2xl font-bold">Create an Account</h2>
+      <h2 className="text-2xl font-bold">Sign In</h2>
       <div className="flex flex-col gap-2">
         <label className="text-gray-700 text-base font-bold flex-1">
           First Name
