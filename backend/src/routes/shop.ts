@@ -9,6 +9,15 @@ import verifyToken from "../middleware/auth";
 
 const shop = Router();
 
+shop.get("", async (req: Request, res: Response) => {
+  try {
+    const shops = await Shop.find();
+    res.status(200).send({ shops });
+  } catch (error) {
+    res.status(500).send({ message: "Something went wrong" });
+  }
+});
+
 shop.get("/my_shops", verifyToken, async (req: Request, res: Response) => {
   try {
     const ownedShops = await Shop.find({ ownerId: req.userId }).select(
