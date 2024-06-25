@@ -36,20 +36,22 @@ const shopSchema = new mongoose.Schema({
       message: "Shop must have atleast one owner",
     },
   },
-  items: {
-    type: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Item",
-      },
-    ],
-  },
+});
+
+shopSchema.virtual("items", {
+  ref: "Item",
+  localField: "_id",
+  foreignField: "shop",
 });
 
 shopSchema.virtual("orderHistory", {
   ref: "Order",
   localField: "_id",
   foreignField: "shop",
+});
+
+shopSchema.set("toJSON", {
+  virtuals: true,
 });
 
 const Shop = mongoose.model<ShopType>("Shop", shopSchema);
