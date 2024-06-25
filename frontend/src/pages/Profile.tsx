@@ -12,7 +12,7 @@ function UserProfile() {
     <div>
       <div>{user.fullName}</div>
       <div>{user.email}</div>
-      <div>{user.cart.length} items in cart</div>
+      <div>{user.cart?.length} items in cart</div>
     </div>
   );
 }
