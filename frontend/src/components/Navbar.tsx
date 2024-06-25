@@ -29,8 +29,12 @@ function Navbar() {
             toggleMenu ? "flex" : "hidden"
           }`}
         >
-          {navigationLinks.map((link) => {
-            return <Link to={link[0]}>{link[1]}</Link>;
+          {navigationLinks.map((link, index) => {
+            return (
+              <Link to={link[0]} key={index}>
+                {link[1]}
+              </Link>
+            );
           })}
         </div>
       </div>
