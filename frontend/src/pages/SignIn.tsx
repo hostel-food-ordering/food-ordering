@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { signInUser } from "../fetch/auth";
+import { Link, useNavigate } from "react-router-dom";
 
 export type SignInFormData = {
   email: string;
@@ -14,8 +15,11 @@ const SignIn = () => {
     formState: { errors },
   } = useForm<SignInFormData>();
 
+  const navigate = useNavigate();
+
   const mutation = useMutation(signInUser, {
     onSuccess() {
+      navigate("/");
       alert("Sign In Successfull!");
     },
     onError(error: Error) {
@@ -67,11 +71,17 @@ const SignIn = () => {
             </p>
           )}
         </label>
+        <div className="m-auto">
+          Don't have an account?{" "}
+          <Link className="text-blue-700" to="/register">
+            Create One
+          </Link>
+        </div>
         <button
           type="submit"
           className="bg-gray-700 rounded m-auto text-white p-2 font-bold w-40"
         >
-          Create Account
+          Sign In
         </button>
       </div>
     </form>

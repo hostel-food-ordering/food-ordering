@@ -1,21 +1,19 @@
 import { useQuery } from "react-query";
 import { userCart } from "../fetch/user";
 import CartItemCard from "../components/CartItemCard";
+import { Key } from "react";
 
 function UserCart() {
   const { data: cart = [] } = useQuery({
     queryKey: ["cart"],
     queryFn: userCart,
-    onSuccess: (a) => {
-      console.log(a);
-    },
     onError: (error) => alert(error),
   });
 
   return (
     <div className="flex flex-wrap">
-      {cart?.map((cartItem: any) => {
-        return <CartItemCard cartItem={cartItem} />;
+      {cart?.map((cartItem: any, index: Key) => {
+        return <CartItemCard key={index} cartItem={cartItem} />;
       })}
     </div>
   );
