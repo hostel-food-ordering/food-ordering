@@ -20,6 +20,24 @@ export const userProfile = async () => {
   return responseBody.user;
 };
 
+export const userCart = async () => {
+  const response = await fetch(`${API_BASE_URL}/api/user/cart`, {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const responseBody = await response.json();
+
+  if (!response.ok) {
+    throw new Error(responseBody.message);
+  }
+
+  return responseBody.cart;
+};
+
 export const registerUser = async (formData: RegisterFormData) => {
   const response = await fetch(`${API_BASE_URL}/api/user/register`, {
     method: "POST",
