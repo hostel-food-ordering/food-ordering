@@ -1,4 +1,6 @@
 import React, { createContext, useContext } from "react";
+import { useQuery } from "react-query";
+import { validateAuthToken } from "../fetch/auth";
 
 type AppContextType = {
   isLoggedIn: boolean;
@@ -11,8 +13,12 @@ export const AppContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { isError } = useQuery("validateToken", validateAuthToken, {
+    retry: false,
+  });
+
   return (
-    <AppContext.Provider value={{ isLoggedIn: false }}>
+    <AppContext.Provider value={{ isLoggedIn: !isError }}>
       {children}
     </AppContext.Provider>
   );
