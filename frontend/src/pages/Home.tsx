@@ -11,7 +11,7 @@ function Home() {
 
   return (
     <>
-      <div className="flex flex-row flex-wrap flex-grow">
+      <div className="flex flex-row justify-center gap-5 flex-wrap flex-grow">
         {shops?.map((shop: any, index: Key) => (
           <ShopCard shop={shop} key={index} />
         ))}

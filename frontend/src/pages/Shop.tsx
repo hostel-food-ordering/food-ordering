@@ -1,15 +1,19 @@
 import { useQuery } from "react-query";
 import { getOneShop } from "../fetch/shop";
-import { useParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ItemCard from "../components/ItemCard";
 import { Key } from "react";
 
 function Shop() {
-  const { shop_id } = useParams();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const shop_id = searchParams.get("shop_id");
 
   const { data: shop = {} } = useQuery({
     queryKey: ["shop"],
     queryFn: () => getOneShop(shop_id as string),
+    onError: () => navigate("/"),
   });
 
   return (

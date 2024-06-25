@@ -9,8 +9,8 @@ function ShopCard({ shop }: ShopCardProps) {
 
   return (
     <div
-      className="border-2 rounded-lg border-red-700 w-96 cursor-pointer"
-      onClick={() => navigate(`/${shop._id}`)}
+      className="border-2 rounded-lg p-5 border-black w-96 cursor-pointer"
+      onClick={() => navigate(`/shop?shop_id=${shop._id}`)}
     >
       <div className="text-lg font-bold">{shop.name}</div>
       <div>{shop.location}</div>
