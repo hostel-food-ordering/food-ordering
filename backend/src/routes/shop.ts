@@ -18,6 +18,15 @@ shop.get("", async (req: Request, res: Response) => {
   }
 });
 
+shop.get("/:shop_id", async (req: Request, res: Response) => {
+  try {
+    const shop = await Shop.findById(req.params.shop_id).populate("items");
+    res.status(200).send({ shop });
+  } catch (error) {
+    res.status(500).send({ message: "Something went wrong" });
+  }
+});
+
 shop.get("/my_shops", verifyToken, async (req: Request, res: Response) => {
   try {
     const ownedShops = await Shop.find({ ownerId: req.userId }).select(
