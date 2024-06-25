@@ -29,6 +29,30 @@ user.get("/profile", verifyToken, async (req: Request, res: Response) => {
   }
 });
 
+user.get("/cart", verifyToken, async (req: Request, res: Response) => {
+  try {
+    const user = await User.findById(req.userId).populate({
+      path: "cart.item",
+      populate: {
+        path: "shop",
+      },
+    });
+    if (!user) {
+      res.cookie("auth_token", "", {
+        expires: new Date(0),
+      });
+      return res.status(404).send({ message: "Forced Logout: User Not Found" });
+    }
+
+    return res.status(200).send({ cart: user.cart });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      message: "Something went wrong",
+    });
+  }
+});
+
 user.post(
   "/register",
   [
