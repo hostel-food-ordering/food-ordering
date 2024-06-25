@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:7000";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const getOneShop = async (shop_id: string) => {
   const response = await fetch(`${API_BASE_URL}/api/shop/${shop_id}`, {
