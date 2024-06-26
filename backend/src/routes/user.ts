@@ -153,7 +153,7 @@ user.patch(
   }
 );
 
-user.patch(
+user.post(
   "/cart/update",
   verifyToken,
   [check("cart").exists().isArray()],
@@ -168,8 +168,6 @@ user.patch(
       if (!user) {
         return res.status(404).send({ message: "User not found" });
       }
-
-      console.log(req.body.cart);
 
       if (!isCartItemTypeArray(req.body.cart)) {
         return res.status(400).send({ message: "Wrong Cart" });

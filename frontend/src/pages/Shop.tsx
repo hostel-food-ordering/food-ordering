@@ -1,8 +1,9 @@
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { getOneShop } from "../fetch/shop";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import ItemCard from "../components/ItemCard";
-import { Key } from "react";
+import { updateUserCart } from "../fetch/user";
+import { useEffect } from "react";
 
 function Shop() {
   const [searchParams] = useSearchParams();
@@ -15,6 +16,19 @@ function Shop() {
     queryFn: () => getOneShop(shop_id as string),
     onError: () => navigate("/"),
   });
+
+  const mutation = useMutation(updateUserCart);
+
+  useEffect(() => {
+    return () => {
+      const my_cart = JSON.parse(localStorage.getItem("cart") || "{}");
+      const upload_cart = Object.keys(my_cart).map((key) => ({
+        item: key,
+        quantity: my_cart[key],
+      }));
+      mutation.mutate({ cart: upload_cart });
+    };
+  }, []);
 
   return (
     <>
