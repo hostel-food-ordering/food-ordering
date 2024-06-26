@@ -28,8 +28,8 @@ function Shop() {
           <h2 className="text-base">Shop Timings: {shop.openingTime}</h2>
         </div>
         <div className="flex flex-wrap">
-          {shop.items?.map((item: any, index: Key) => {
-            return <ItemCard item={item} key={index} />;
+          {shop.items?.map((item: any) => {
+            return <ItemCard item={item} key={item._id} />;
           })}
         </div>
       </div>
