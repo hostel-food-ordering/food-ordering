@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { ShopType } from "./shop";
 
 export type ItemType = {
+  _id: mongoose.Types.ObjectId;
   name: string;
   price: number;
   image_url: string;

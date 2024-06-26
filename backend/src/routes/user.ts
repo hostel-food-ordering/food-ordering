@@ -5,7 +5,7 @@ import User from "../models/user";
 import verifyToken from "../middleware/auth";
 import { isCartItemTypeArray } from "../utils/checkCart";
 import mongoose from "mongoose";
-import { CartItemType, ItemType } from "../models/item";
+import Item, { CartItemType, ItemType } from "../models/item";
 import Order, { OrderCartItemType } from "../models/order";
 
 const user = Router();
@@ -47,6 +47,27 @@ user.get("/cart", verifyToken, async (req: Request, res: Response) => {
     return res.status(200).send({ cart: user.cart });
   } catch (error) {
     console.log(error);
+    return res.status(500).send({
+      message: "Something went wrong",
+    });
+  }
+});
+
+user.post("/local-cart", async (req: Request, res: Response) => {
+  try {
+    const { cart } = req.body;
+    const ids = Object.keys(cart).map((id) => id);
+    if (ids.length == 0) {
+      return res.status(200).send({ cart: [] });
+    }
+    const items = await Item.find({ _id: { $in: ids } }).populate("shop");
+    const itemsWithQuantities = items.map((item) => ({
+      item: item,
+      quantity: cart[item._id.toString()],
+    }));
+
+    return res.status(200).send({ cart: itemsWithQuantities });
+  } catch (error) {
     return res.status(500).send({
       message: "Something went wrong",
     });
