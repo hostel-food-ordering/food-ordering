@@ -1,6 +1,7 @@
 import React, { createContext, useContext } from "react";
 import { useQuery } from "react-query";
 import { validateAuthToken } from "../fetch/auth";
+import { userCart } from "../fetch/user";
 
 type AppContextType = {
   isLoggedIn: boolean;
@@ -13,12 +14,14 @@ export const AppContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { isError } = useQuery("validateToken", validateAuthToken, {
+  const { isSuccess } = useQuery("validateToken", validateAuthToken, {
     retry: false,
   });
 
+  useQuery("userCart", userCart, { retry: false, enabled: isSuccess });
+
   return (
-    <AppContext.Provider value={{ isLoggedIn: !isError }}>
+    <AppContext.Provider value={{ isLoggedIn: isSuccess }}>
       {children}
     </AppContext.Provider>
   );

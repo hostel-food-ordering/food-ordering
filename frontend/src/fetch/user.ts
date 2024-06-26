@@ -35,6 +35,34 @@ export const userCart = async () => {
     throw new Error(responseBody.message);
   }
 
+  const cart = responseBody.cart.reduce((acc: any, obj: any) => {
+    acc[obj.item._id] = obj.quantity;
+    return acc;
+  }, {});
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  return responseBody.cart;
+};
+
+export const localUserCart = async () => {
+  const cart = JSON.parse(localStorage.getItem("cart") || "{}");
+
+  const response = await fetch(`${API_BASE_URL}/api/user/local-cart`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ cart }),
+  });
+
+  const responseBody = await response.json();
+
+  if (!response.ok) {
+    throw new Error(responseBody.message);
+  }
+
   return responseBody.cart;
 };
 

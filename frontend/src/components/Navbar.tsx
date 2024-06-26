@@ -15,6 +15,7 @@ function Navbar() {
       ]
     : [
         ["/categories", "Catergories"],
+        ["/cart", "Cart"],
         ["/sign-in", "Sign In"],
       ];
 
