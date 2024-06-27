@@ -31,7 +31,7 @@ const Register = () => {
   });
 
   const onSubmit = handleSubmit((data) => {
-    mutation.mutate(data);
+    if (!mutation.isLoading) mutation.mutate(data);
   });
 
   return (
@@ -125,6 +125,7 @@ const Register = () => {
         <button
           type="submit"
           className="bg-gray-700 rounded m-auto text-white p-2 font-bold w-40"
+          disabled={mutation.isLoading}
         >
           Create Account
         </button>
