@@ -9,17 +9,31 @@ function UserCart() {
     onError: (error) => alert(error),
   });
 
+  const groupedCart = localCart.reduce((acc: any, cartItem: any) => {
+    const shopId = cartItem.item.shop._id;
+    if (!acc[shopId]) {
+      acc[shopId] = [];
+    }
+    acc[shopId].push(cartItem);
+    return acc;
+  }, {});
+
   return (
-    <div className="flex flex-wrap">
-      {localCart?.map((cartItem: any) => {
-        return (
-          <ItemCard
-            key={cartItem.item._id}
-            item={cartItem.item}
-            itemQuantity={cartItem.quantity}
-          />
-        );
-      })}
+    <div className="flex flex-col flex-wrap">
+      {Object.keys(groupedCart).map((shop_id) => (
+        <div key={`cart-${shop_id}`}>
+          <h2>{groupedCart[shop_id][0].item.shop.name}</h2>
+          <div className="flex">
+            {groupedCart[shop_id].map((cartItem: any) => (
+              <ItemCard
+                key={cartItem.item._id}
+                item={cartItem.item}
+                itemQuantity={cartItem.quantity}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
