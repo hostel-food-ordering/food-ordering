@@ -20,30 +20,30 @@ export const userProfile = async () => {
   return responseBody.user;
 };
 
-export const userCart = async () => {
-  const response = await fetch(`${API_BASE_URL}/api/user/cart`, {
-    method: "GET",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+// export const userCart = async () => {
+//   const response = await fetch(`${API_BASE_URL}/api/user/cart`, {
+//     method: "GET",
+//     credentials: "include",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   });
 
-  const responseBody = await response.json();
+//   const responseBody = await response.json();
 
-  if (!response.ok) {
-    throw new Error(responseBody.message);
-  }
+//   if (!response.ok) {
+//     throw new Error(responseBody.message);
+//   }
 
-  const cart = responseBody.cart.reduce((acc: any, obj: any) => {
-    acc[obj.item._id] = obj.quantity;
-    return acc;
-  }, {});
+//   const cart = responseBody.cart.reduce((acc: any, obj: any) => {
+//     acc[obj.item._id] = obj.quantity;
+//     return acc;
+//   }, {});
 
-  localStorage.setItem("cart", JSON.stringify(cart));
+//   localStorage.setItem("cart", JSON.stringify(cart));
 
-  return responseBody.cart;
-};
+//   return responseBody.cart;
+// };
 
 export const localUserCart = async () => {
   const cart = JSON.parse(localStorage.getItem("cart") || "{}");
@@ -66,22 +66,22 @@ export const localUserCart = async () => {
   return responseBody.cart;
 };
 
-export const updateUserCart = async (cart: any) => {
-  const response = await fetch(`${API_BASE_URL}/api/user/cart/update`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(cart),
-  });
+// export const updateUserCart = async (cart: any) => {
+//   const response = await fetch(`${API_BASE_URL}/api/user/cart/update`, {
+//     method: "POST",
+//     credentials: "include",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(cart),
+//   });
 
-  const responseBody = await response.json();
+//   const responseBody = await response.json();
 
-  if (!response.ok) {
-    throw new Error(responseBody.message);
-  }
-};
+//   if (!response.ok) {
+//     throw new Error(responseBody.message);
+//   }
+// };
 
 export const registerUser = async (formData: RegisterFormData) => {
   const response = await fetch(`${API_BASE_URL}/api/user/register`, {

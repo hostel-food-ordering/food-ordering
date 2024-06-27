@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { validateAuthToken } from "../fetch/auth";
-import { userCart } from "../fetch/user";
 import Toast from "../components/Toast";
 
 type AppContextType = {
@@ -28,8 +27,6 @@ export const AppContextProvider = ({
   const { isSuccess } = useQuery("validateToken", validateAuthToken, {
     retry: false,
   });
-
-  useQuery("userCart", userCart, { retry: false, enabled: isSuccess });
 
   return (
     <AppContext.Provider
