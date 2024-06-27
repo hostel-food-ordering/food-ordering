@@ -60,7 +60,10 @@ user.post("/local-cart", async (req: Request, res: Response) => {
     if (ids.length == 0) {
       return res.status(200).send({ cart: [] });
     }
-    const items = await Item.find({ _id: { $in: ids } }).populate("shop");
+    const items = await Item.find({ _id: { $in: ids } }).populate(
+      "shop",
+      "name"
+    );
     const itemsWithQuantities = items.map((item) => ({
       item: item,
       quantity: cart[item._id.toString()],
