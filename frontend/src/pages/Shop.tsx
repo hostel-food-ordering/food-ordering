@@ -9,7 +9,7 @@ function Shop() {
   const shop_id = searchParams.get("shop_id");
 
   const { data: shop = {} } = useQuery({
-    queryKey: ["shop"],
+    queryKey: [`shop-${shop_id}`],
     queryFn: () => getOneShop(shop_id as string),
     onError: () => navigate("/"),
   });
