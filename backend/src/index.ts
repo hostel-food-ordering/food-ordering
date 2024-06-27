@@ -4,6 +4,7 @@ import "dotenv/config";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import router from "./routes/index_route";
+import path from "path";
 
 mongoose
   .connect(process.env.MONGO_DB as string)
@@ -16,6 +17,8 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
+
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
 app.use("/api", router);
 
