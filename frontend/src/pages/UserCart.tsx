@@ -19,11 +19,11 @@ function UserCart() {
   }, {});
 
   return (
-    <div className="flex flex-col flex-wrap">
+    <div className="flex flex-col">
       {Object.keys(groupedCart).map((shop_id) => (
         <div key={`cart-${shop_id}`}>
           <h2>{groupedCart[shop_id][0].item.shop.name}</h2>
-          <div className="flex">
+          <div className="flex flex-wrap">
             {groupedCart[shop_id].map((cartItem: any) => (
               <ItemCard
                 key={cartItem.item._id}
