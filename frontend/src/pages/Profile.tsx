@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { userProfile } from "../fetch/user";
 import { signOut } from "../fetch/auth";
 import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../contexts/AppContext";
 
 function UserProfile() {
   const { data: user = {} } = useQuery({
@@ -13,13 +14,16 @@ function UserProfile() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
+  const { showToast } = useAppContext();
+
   const mutation = useMutation(signOut, {
     onSuccess: async () => {
       await queryClient.invalidateQueries("validateToken");
+      showToast("Signed Out", "SUCCESS");
       navigate("/");
     },
     onError: (error: Error) => {
-      alert(error.message);
+      showToast(error.message, "ERROR");
     },
   });
 

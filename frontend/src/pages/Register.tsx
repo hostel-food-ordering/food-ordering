@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { registerUser } from "../fetch/user";
+import { useAppContext } from "../contexts/AppContext";
 
 export type RegisterFormData = {
   firstName: string;
@@ -18,12 +19,14 @@ const Register = () => {
     formState: { errors },
   } = useForm<RegisterFormData>();
 
+  const { showToast } = useAppContext();
+
   const mutation = useMutation(registerUser, {
     onSuccess() {
-      window.prompt("Registration Successfull!");
+      showToast("Registration Successfull", "SUCCESS");
     },
     onError(error: Error) {
-      window.prompt(error.message);
+      showToast(error.message, "ERROR");
     },
   });
 

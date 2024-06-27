@@ -1,10 +1,20 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { useQuery } from "react-query";
 import { validateAuthToken } from "../fetch/auth";
 import { userCart } from "../fetch/user";
+import Toast from "../components/Toast";
 
 type AppContextType = {
   isLoggedIn: boolean;
+  showToast: (
+    message: ToastMessage["message"],
+    type: ToastMessage["type"]
+  ) => void;
+};
+
+type ToastMessage = {
+  message: string;
+  type: "SUCCESS" | "ERROR";
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -14,6 +24,7 @@ export const AppContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const [toast, setToast] = useState<ToastMessage | undefined>(undefined);
   const { isSuccess } = useQuery("validateToken", validateAuthToken, {
     retry: false,
   });
@@ -21,8 +32,20 @@ export const AppContextProvider = ({
   useQuery("userCart", userCart, { retry: false, enabled: isSuccess });
 
   return (
-    <AppContext.Provider value={{ isLoggedIn: isSuccess }}>
+    <AppContext.Provider
+      value={{
+        isLoggedIn: isSuccess,
+        showToast: (message, type) => setToast({ message, type }),
+      }}
+    >
       {children}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(undefined)}
+        />
+      )}
     </AppContext.Provider>
   );
 };

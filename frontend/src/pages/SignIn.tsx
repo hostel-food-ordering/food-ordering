@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { signInUser } from "../fetch/auth";
 import { Link, useNavigate } from "react-router-dom";
+import { useAppContext } from "../contexts/AppContext";
 
 export type SignInFormData = {
   email: string;
@@ -16,14 +17,17 @@ const SignIn = () => {
   } = useForm<SignInFormData>();
 
   const navigate = useNavigate();
+  const { showToast } = useAppContext();
+  const queryClient = useQueryClient();
 
   const mutation = useMutation(signInUser, {
     onSuccess() {
       navigate("/");
-      alert("Sign In Successfull!");
+      queryClient.invalidateQueries("validateToken");
+      showToast("Signed In Successfully", "SUCCESS");
     },
     onError(error: Error) {
-      alert(error.message);
+      showToast(error.message, "ERROR");
     },
   });
 
