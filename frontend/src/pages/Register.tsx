@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { registerUser } from "../fetch/user";
 import { useAppContext } from "../contexts/AppContext";
+import BounceLoading from "../components/BounceLoading";
 
 export type RegisterFormData = {
   firstName: string;
@@ -127,7 +128,7 @@ const Register = () => {
           className="bg-gray-700 rounded m-auto text-white p-2 font-bold w-40"
           disabled={mutation.isLoading}
         >
-          Create Account
+          {mutation.isLoading ? <BounceLoading /> : "Create Account"}
         </button>
       </div>
     </form>

@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { signInUser } from "../fetch/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "../contexts/AppContext";
+import BounceLoading from "../components/BounceLoading";
 
 export type SignInFormData = {
   email: string;
@@ -86,7 +87,7 @@ const SignIn = () => {
           className="bg-gray-700 rounded m-auto text-white p-2 font-bold w-40"
           disabled={mutation.isLoading}
         >
-          Sign In
+          {mutation.isLoading ? <BounceLoading /> : "Sign In"}
         </button>
       </div>
     </form>
