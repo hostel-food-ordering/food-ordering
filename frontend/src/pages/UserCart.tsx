@@ -1,12 +1,16 @@
 import { useQuery } from "react-query";
 import { localUserCart } from "../fetch/user";
 import ItemCard from "../components/ItemCard";
+import ShopName from "../components/ShopName";
 
 function UserCart() {
   let { data: localCart = [] } = useQuery({
     queryKey: ["localUserCart"],
     queryFn: localUserCart,
     onError: (error) => alert(error),
+    onSuccess: (data) => {
+      console.log(data);
+    },
   });
 
   const groupedCart = localCart.reduce((acc: any, cartItem: any) => {
@@ -18,21 +22,27 @@ function UserCart() {
     return acc;
   }, {});
 
+  console.log(groupedCart);
+
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-4 my-4">
       {Object.keys(groupedCart).map((shop_id) => (
-        <div key={`cart-${shop_id}`}>
-          <h2>{groupedCart[shop_id][0].item.shop.name}</h2>
-          <div className="flex flex-wrap">
-            {groupedCart[shop_id].map((cartItem: any) => (
-              <ItemCard
-                key={cartItem.item._id}
-                item={cartItem.item}
-                itemQuantity={cartItem.quantity}
-              />
-            ))}
+        <>
+          <div className="flex flex-col gap-2" key={`cart-${shop_id}`}>
+            <div className="px-2 text-white text-2xl">
+              <ShopName shop={groupedCart[shop_id][0].item.shop} />
+            </div>
+            <div className=" grid grid-cols-2 gap-2">
+              {groupedCart[shop_id].map((cartItem: any) => (
+                <ItemCard
+                  key={cartItem.item._id}
+                  item={cartItem.item}
+                  itemQuantity={cartItem.quantity}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        </>
       ))}
     </div>
   );

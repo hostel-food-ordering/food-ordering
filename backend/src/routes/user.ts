@@ -62,7 +62,7 @@ user.post("/local-cart", async (req: Request, res: Response) => {
     }
     const items = await Item.find({ _id: { $in: ids } }).populate(
       "shop",
-      "name"
+      "name isOpen"
     );
     const itemsWithQuantities = items.map((item) => ({
       item: item,

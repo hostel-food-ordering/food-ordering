@@ -3,20 +3,20 @@ import { userProfile } from "../fetch/user";
 import SignOutButton from "../components/SignOutBtn";
 
 function UserProfile() {
-  const { data: user = {} } = useQuery({
+  const { data: user = {}, isSuccess } = useQuery({
     queryKey: ["profile"],
     queryFn: userProfile,
     onError: (error) => alert(error),
   });
 
-  return (
-    <div>
-      <div>{user.fullName}</div>
-      <div>{user.email}</div>
-      <div>{user.cart?.length} items in cart</div>
-      <SignOutButton />
-    </div>
-  );
+  if (isSuccess)
+    return (
+      <div className="bg-white my-4 px-6 py-4 rounded-lg flex flex-col">
+        <div className="text-lg font-semibold">{user.fullName}</div>
+        <div>{user.email}</div>
+        <SignOutButton />
+      </div>
+    );
 }
 
 export default UserProfile;

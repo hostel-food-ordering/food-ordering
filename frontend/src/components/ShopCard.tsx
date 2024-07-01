@@ -1,21 +1,21 @@
-import { useNavigate } from "react-router-dom";
+import ShopName from "./ShopName";
 
 interface ShopCardProps {
   shop: any;
 }
 
 function ShopCard({ shop }: ShopCardProps) {
-  const navigate = useNavigate();
-
   return (
-    <div
-      className="border-2 rounded-lg p-5 border-black w-96 cursor-pointer"
-      onClick={() => navigate(`/shop?shop_id=${shop._id}`)}
-    >
-      <div className="text-lg font-bold">{shop.name}</div>
-      <div>{shop.location}</div>
-      <div>{shop.email}</div>
-      <div>{shop.phone}</div>
+    <div>
+      <div className="text-2xl">
+        <ShopName shop={shop} />
+      </div>
+      <h2 className="text-base">{shop?.location}</h2>
+      <h2 className="text-base">{shop?.email}</h2>
+      <h2 className="text-base">{shop?.phone}</h2>
+      {shop?.openingTime && (
+        <h2 className="text-base">Shop Timings: {shop?.openingTime}</h2>
+      )}
     </div>
   );
 }
