@@ -33,3 +33,22 @@ export const getAllShops = async () => {
 
   return responseBody.shops;
 };
+
+export const toggleShopStatus = async (shop_id: string) => {
+  const response = await fetch(`${API_BASE_URL}/api/shop/toggle-status`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({ shop_id }),
+  });
+
+  const responseBody = await response.json();
+
+  if (!response.ok) {
+    throw new Error(responseBody.message);
+  }
+
+  return responseBody.message;
+};

@@ -23,7 +23,7 @@ export default function SignOutButton() {
 
   return (
     <button
-      className="bg-gray-700 rounded m-auto my-5 text-white p-2 font-bold w-40"
+      className="btn my-5"
       onClick={() => {
         if (!mutation.isLoading) mutation.mutate();
       }}
