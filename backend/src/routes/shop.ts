@@ -27,16 +27,16 @@ shop.get("/:shop_id", async (req: Request, res: Response) => {
   }
 });
 
-shop.get("/my_shops", verifyToken, async (req: Request, res: Response) => {
-  try {
-    const ownedShops = await Shop.find({ ownerId: req.userId }).select(
-      "-_id -items -ownerId"
-    );
-    res.status(200).send({ ownedShops });
-  } catch (error) {
-    res.status(500).send({ message: "Something went wrong" });
-  }
-});
+// shop.get("/my_shops", verifyToken, async (req: Request, res: Response) => {
+//   try {
+//     const ownedShops = await Shop.find({ ownerId: req.userId }).select(
+//       "-_id -items -ownerId"
+//     );
+//     res.status(200).send({ ownedShops });
+//   } catch (error) {
+//     res.status(500).send({ message: "Something went wrong" });
+//   }
+// });
 
 shop.post(
   "/register",
@@ -130,6 +130,21 @@ shop.delete(
     }
   }
 );
+
+shop.patch("/toggle-status", isOwner, async (req: Request, res: Response) => {
+  try {
+    req.shop.isOpen = !req.shop.isOpen;
+    await req.shop.save();
+    return res
+      .status(200)
+      .send({ message: `Shop ${req.shop.isOpen ? "Opened" : "Closed"}` });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "Something went wrong",
+    });
+  }
+});
 
 shop.patch(
   "/update/:shop_id",
