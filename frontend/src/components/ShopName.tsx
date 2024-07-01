@@ -1,4 +1,8 @@
-export default function ShopName({ shop }: any) {
+export default function ShopName({
+  shop,
+}: {
+  shop: { name: string; isOpen: boolean };
+}) {
   return (
     <div className="flex items-center">
       {shop?.name}

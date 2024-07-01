@@ -1,10 +1,11 @@
 import { useState } from "react";
 import ImageContainter from "./ImageContainer";
+import { ItemType } from "../utils/types";
 
-interface ItemCardProps {
-  item: any;
-  itemQuantity?: any;
-}
+type ItemCardProps = {
+  item: ItemType;
+  itemQuantity?: number;
+};
 
 function ItemCard({ item, itemQuantity }: ItemCardProps) {
   const [quantity, setQuantity] = useState(

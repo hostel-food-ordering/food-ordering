@@ -1,10 +1,11 @@
 import { useAppContext } from "../contexts/AppContext";
 import { toggleShopStatus } from "../fetch/shop";
+import { ShopType } from "../utils/types";
 import MutationBtn from "./MutationBtn";
 import ShopCard from "./ShopCard";
 import { useMutation, useQueryClient } from "react-query";
 
-export default function ShopOwnerCard({ shop }: { shop: any }) {
+export default function ShopOwnerCard({ shop }: { shop: ShopType }) {
   const queryClient = useQueryClient();
   const { showToast } = useAppContext();
 
