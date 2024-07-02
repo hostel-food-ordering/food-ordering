@@ -7,6 +7,7 @@ import SignIn from "./pages/SignIn";
 import UserProfile from "./pages/Profile";
 import UserCart from "./pages/UserCart";
 import ShopOwner from "./pages/ShopOwner";
+import AddItem from "./pages/AddItem";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
+          <Route path="/shop/add" element={<AddItem />} />
           <Route path="/shop-owner" element={<ShopOwner />} />
           <Route path="/account" element={<UserProfile />} />
           <Route path="/cart" element={<UserCart />} />

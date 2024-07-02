@@ -8,7 +8,7 @@ export default function ImageContainter({
   id: objectID;
 }) {
   return (
-    <div className={`relative w-full pt-[75%] overflow-hidden`}>
+    <div className={`relative w-full pt-[75%] overflow-hidden rounded`}>
       <img
         src={url}
         alt={id}

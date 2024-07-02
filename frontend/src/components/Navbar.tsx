@@ -21,21 +21,18 @@ export default function Navbar() {
 
   const navbarRef = useRef<HTMLDivElement>(null);
 
-  const navbarHeight = `sm:min-h-[70px] sm:max-h[70px]`;
-
   return (
     <div className="w-full">
       <div
-        className={navbarHeight}
         style={{
           height: toggleMenu ? navbarRef.current?.scrollHeight + "px" : "60px",
         }}
       ></div>
+      <div className="py-2"></div>
       <div className="fixed z-50 top-0 left-0 w-full bg-white border-b border-slate-800">
         <div
           className={
-            "max-w-screen-xl m-auto p-3 flex flex-col sm:flex-row justify-between items-center overflow-hidden transition-[max-height] " +
-            navbarHeight
+            "max-w-screen-xl m-auto p-3 flex flex-col sm:flex-row justify-between items-center overflow-hidden transition-[max-height] "
           }
           ref={navbarRef}
           style={{
@@ -57,7 +54,7 @@ export default function Navbar() {
           </div>
           <div>
             <div
-              className={`flex flex-col justify-center items-center sm:flex sm:flex-row text-xl gap-5 mt-2`}
+              className={`flex flex-col justify-center items-center sm:flex sm:flex-row text-xl gap-5 mt-2 sm:mt-0`}
             >
               {navigationLinks.map((link, index) => {
                 return (

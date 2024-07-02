@@ -16,12 +16,7 @@ function ItemCard({ item, itemQuantity }: ItemCardProps) {
 
   return (
     <div className="bg-slate-700 text-white rounded-md p-2">
-      <ImageContainter
-        url={
-          "https://images.pexels.com/photos/2679501/pexels-photo-2679501.jpeg?cs=srgb&dl=pexels-shantanu-pal-938952-2679501.jpg&fm=jpg&w=640&h=800&_gl=1*h3fggv*_ga*NDI3MTgzMjIxLjE3MTk0ODE5Mzc.*_ga_8JE65Q40S6*MTcxOTQ4MTkzNy4xLjEuMTcxOTQ4MTk5OS4wLjAuMA.."
-        }
-        id={item._id}
-      />
+      <ImageContainter url={item.image_url} id={item._id} />
       <div className="mb-2">
         <div>{item.name}</div>
         <div>{item.price}</div>

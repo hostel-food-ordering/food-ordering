@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useAppContext } from "../contexts/AppContext";
 import { toggleShopStatus } from "../fetch/shop";
 import { ShopType } from "../utils/types";
@@ -29,11 +30,12 @@ export default function ShopOwnerCard({ shop }: { shop: ShopType }) {
               data={shop._id}
               label={shop.isOpen ? "Close Shop" : "Open Shop"}
             />
-            <MutationBtn
-              mutation={toggleStatusMutation}
-              data={shop._id}
-              label={shop.isOpen ? "Close Shop" : "Open Shop"}
-            />
+            <Link
+              to={`/shop/add?shop_id=${shop._id}`}
+              className="btn text-center"
+            >
+              Add Item
+            </Link>
           </div>
         </div>
       </div>
