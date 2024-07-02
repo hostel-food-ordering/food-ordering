@@ -1,32 +1,44 @@
 import { Router, Request, Response } from "express";
 import isOwner from "../middleware/shopOwner";
-import { check, param, validationResult } from "express-validator";
-import { isItemType, isItemTypeArray } from "../utils/checkItem";
-import Item, { ItemType } from "../models/item";
+import { body, check, param, validationResult } from "express-validator";
+import { isItemType } from "../utils/checkItem";
+import Item from "../models/item";
 import mongoose from "mongoose";
+import { githubUpload, uploadMulter } from "../utils/fileUpload";
+import { returnValidation } from "../utils/validation";
 
 const item = Router();
 
 item.post(
   "/add",
+  uploadMulter.single("image"),
   isOwner,
-  [check("items", "Items missing").exists().isArray()],
+  [
+    body("name").notEmpty().withMessage("Name is required"),
+    body("price")
+      .notEmpty()
+      .withMessage("Price is required")
+      .isNumeric()
+      .withMessage("Price must be a number"),
+    body("category").notEmpty().withMessage("Category is required"),
+    body("isVegetarian")
+      .isBoolean()
+      .withMessage("isVegetarian must be a boolean value"),
+  ],
+  returnValidation,
   async (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).send({ message: errors.array() });
-    }
-
     try {
-      if (!isItemTypeArray(req.body.items)) {
-        return res.status(400).send({ message: "Wrong Item Type" });
-      }
+      const image_url = await githubUpload(req.shopId, req.file, "item");
 
-      req.body.items.forEach((item: ItemType) => {
-        item.shop = new mongoose.Types.ObjectId(req.shopId);
+      const item = new Item({
+        name: req.body.name,
+        price: req.body.price,
+        image_url: image_url,
+        category: req.body.category,
+        isVegetarian: req.body.isVegetarian,
+        shop: req.shopId,
       });
-
-      await Item.insertMany(req.body.items);
+      await item.save();
 
       return res.status(200).send({ message: "Items Added Successfully" });
     } catch (error) {
